@@ -82,9 +82,28 @@ if ! [[ "$node_engine" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
 fi
 
 # Download node from Heroku's S3 mirror of nodejs.org/dist
-info "Downloading and installing node $node_engine..."
 node_url="http://s3pository.heroku.com/node/v$node_engine/node-v$node_engine-linux-x64.tar.gz"
-curl $node_url -s -o - | tar xzf - -C /tmp
+cached_download_file="${STARDOCK_CACHE}/buildpack_download_cache/$node_nginx.tmp.tar.gz"
+tmp_file_to_extract="/tmp/$node_nginx.tmp.tar.gz"
+
+if [ -f "${cached_download_file}" ]; then
+  info "Using cached download ${cached_download_file}..."
+  cp "${cached_download_file}" "${tmp_file_to_extract}"
+fi
+
+if [ ! -f "${tmp_file_to_extract}" ]; then
+  info "Downloading node $node_engine..."
+  curl $node_url -s -o "${tmp_file_to_extract}"
+
+  if [ -w "${STARDOCK_CACHE}" ] \
+  && [ ! -f "${cached_download_file}" ]; then
+    info "Saving Cache $node_engine..."
+    mkdir -p "$(dirname ${cached_download_file})"
+    mv "${tmp_file_to_extract}" "${cached_download_file}"
+  fi
+fi
+info "Installing $node_engine..."
+tar xzf "${tmp_file_to_extract}" -C /tmp
 
 # Move node (and npm) into .heroku/node and make them executable
 mv /tmp/node-v$node_engine-linux-x64/* $heroku_dir/node
