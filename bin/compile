@@ -93,7 +93,7 @@ fi
 
 if [ ! -f "${tmp_file_to_extract}" ]; then
   info "Downloading node $node_engine..."
-  curl $node_url -s -o "${tmp_file_to_extract}"
+  curl $node_url -s -L -o "${tmp_file_to_extract}"
 
   if [ -w "${STARDOCK_CACHE}" ] \
   && [ ! -f "${cached_download_file}" ]; then
