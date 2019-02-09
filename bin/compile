@@ -99,7 +99,9 @@ if [ ! -f "${tmp_file_to_extract}" ]; then
   && [ ! -f "${cached_download_file}" ]; then
     info "Saving Cache $node_engine..."
     mkdir -p "$(dirname ${cached_download_file})"
+    # Looks weird but we want the locking
     mv "${tmp_file_to_extract}" "${cached_download_file}"
+    cp "${cached_download_file}" "${tmp_file_to_extract}"
   fi
 fi
 info "Installing $node_engine..."
