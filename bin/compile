@@ -82,7 +82,7 @@ if ! [[ "$node_engine" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
 fi
 
 # Download node from Heroku's S3 mirror of nodejs.org/dist
-node_url="http://s3pository.heroku.com/node/v$node_engine/node-v$node_engine-linux-x64.tar.gz"
+node_url="https://s3pository.heroku.com/node/v$node_engine/node-v$node_engine-linux-x64.tar.gz"
 cached_download_file="${STARDOCK_CACHE}/buildpack_download_cache/$node_engine.tmp.tar.gz"
 tmp_file_to_extract="/tmp/$node_engine.tmp.tar.gz"
 
